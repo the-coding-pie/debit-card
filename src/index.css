@@ -1,0 +1,58 @@
+@import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --source-code-pro: "Source Code Pro", monospace;
+}
+
+@layer base {
+  html {
+    font-size: 16px;
+  }
+
+  body {
+    width: 100%;
+    min-height: 100vh;
+
+    overflow-x: hidden !important;
+    overflow-y: auto;
+
+    font-size: 1rem;
+    font-weight: 400;
+
+    font-family: var(--source-code-pro);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  label {
+    @apply text-gray-800 text-sm;
+  }
+
+  input,
+  select {
+    border-width: 1px;
+    @apply w-full px-4 py-2.5 rounded border-gray-300 text-base text-gray-900 outline-none;
+  }
+
+  input:focus,
+  select:focus {
+    @apply border-blue-400;
+  }
+
+  select {
+    @apply py-3;
+  }
+}
+
+@layer components {
+  .form-group {
+    @apply flex flex-col gap-y-1.5;
+  }
+}
+
+@layer utilities {
+}
