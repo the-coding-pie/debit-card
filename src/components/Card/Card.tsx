@@ -2,8 +2,31 @@ import { useCallback } from "react";
 import useCard from "../../hooks/useCard";
 import "./Card.css";
 
+const CARDS = {
+  visa: "^4",
+  amex: "^(34|37)",
+  mastercard: "^5[1-5]",
+  discover: "^6011",
+  unionpay: "^62",
+  troy: "^9792",
+  diners: "^(30[0-5]|36)",
+};
+
 const Card = () => {
   const { state, setState } = useCard();
+
+  const cardType = useCallback((cardNumber: string) => {
+    const number = cardNumber;
+    let re;
+    for (const [card, pattern] of Object.entries(CARDS)) {
+      re = new RegExp(pattern);
+      if (number.match(re) != null) {
+        return card;
+      }
+    }
+
+    return "visa"; // default type
+  }, []);
 
   const maskCardNumber = useCallback((cardNumber: string) => {
     let cardNumberArr = cardNumber.split("");
@@ -35,7 +58,7 @@ const Card = () => {
             />
             <div style={{ height: "45px" }}>
               <img
-                src="/cardType/visa.png"
+                src={`/cardType/${cardType(state.cardNumber)}.png`}
                 alt="card-type"
                 className="object-contain w-full h-full"
               />
