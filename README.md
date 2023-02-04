@@ -9,4 +9,4 @@ I got inspired from this reddit post: https://www.reddit.com/r/reactjs/comments/
 (Spoiler Alert 🚨: Animation was new for me, so I took a look into his codebase 🫣)
 
 
-Live Demo -> https://debit-card-sigma.vercel.app/
+## Live Demo -> https://debit-card-sigma.vercel.app/
