@@ -1,9 +1,26 @@
-import React, { useCallback } from "react";
+import { useCallback } from "react";
 import useCard from "../../hooks/useCard";
 import "./Card.css";
 
 const Card = () => {
   const { state, setState } = useCard();
+
+  const maskCardNumber = useCallback((cardNumber: string) => {
+    let cardNumberArr = cardNumber.split("");
+    cardNumberArr.forEach((val, index) => {
+      if (index > 4 && index < 14) {
+        if (cardNumberArr[index] !== " ") {
+          cardNumberArr[index] = "*";
+        }
+      }
+    });
+
+    return cardNumberArr;
+  }, []);
+
+  const maskCvv = useCallback((cvv: string) => {
+    return "*".repeat(cvv.length);
+  }, []);
 
   return (
     <div className={`card absolute -top-28 left-16 font-sourceCodePro`}>
@@ -48,7 +65,9 @@ const Card = () => {
                 fontSize: "27px",
               }}
             >
-              {state.cardNumber}
+              {state.cardNumber === "#### #### #### ####"
+                ? state.cardNumber
+                : maskCardNumber(state.cardNumber).map((n) => <span>{n}</span>)}
             </h3>
           </div>
 
@@ -84,7 +103,9 @@ const Card = () => {
                   fontSize: "18px",
                 }}
               >
-                {state.cardHolder}
+                {state.cardHolder.split("").map((n) => (
+                  <span>{n.toUpperCase()}</span>
+                ))}
               </span>
             </div>
             <div
@@ -117,7 +138,13 @@ const Card = () => {
                   fontSize: "18px",
                 }}
               >
-                {state.expirationMonth}/{state.expirationYear}
+                {state.expirationMonth.split("").map((n) => (
+                  <span>{n}</span>
+                ))}
+                /
+                {state.expirationYear.split("").map((n) => (
+                  <span>{n}</span>
+                ))}
               </span>
             </div>
           </div>
@@ -146,7 +173,13 @@ const Card = () => {
               className="bg-white rounded flex items-center justify-end pr-2.5 mb-7"
               style={{ height: "45px" }}
             >
-              <span>{state.cvv}</span>
+              <span>
+                {maskCvv(state.cvv)
+                  .split("")
+                  .map((n) => (
+                    <span>{n}</span>
+                  ))}
+              </span>
             </div>
 
             <div className="w-full flex items-center justify-end">

@@ -41,6 +41,7 @@ const Years = [
 const Form = ({ children }: Props) => {
   const { state, setState } = useCard();
   const [cardNumber, setCardNumber] = useState("");
+  const [cardHolder, setCardHolder] = useState("");
 
   const cardNumberRef = useRef<HTMLInputElement | null>(null);
   const cardHolderRef = useRef<HTMLInputElement | null>(null);
@@ -61,18 +62,77 @@ const Form = ({ children }: Props) => {
     }
   }, [state.activeInput]);
 
+  const formatCardNumber = useCallback((value: string): string => {
+    let cardNumber = value;
+
+    value = value.replace(/\D/g, "");
+
+    if (/^3[47]\d{0,13}$/.test(value)) {
+      cardNumber = value
+        .replace(/(\d{4})/, "$1 ")
+        .replace(/(\d{4}) (\d{6})/, "$1 $2 ");
+    } else if (/^3(?:0[0-5]|[68]\d)\d{0,11}$/.test(value)) {
+      // diner's club, 14 digits
+      cardNumber = value
+        .replace(/(\d{4})/, "$1 ")
+        .replace(/(\d{4}) (\d{6})/, "$1 $2 ");
+    } else if (/^\d{0,16}$/.test(value)) {
+      // regular cc number, 16 digits
+      cardNumber = value
+        .replace(/(\d{4})/, "$1 ")
+        .replace(/(\d{4}) (\d{4})/, "$1 $2 ")
+        .replace(/(\d{4}) (\d{4}) (\d{4})/, "$1 $2 $3 ");
+    }
+    return cardNumber.trim();
+  }, []);
+
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const { name, value } = e.target;
 
+      // local update
       if (name === "cardNumber") {
-        setCardNumber(e.target.value);
+        setCardNumber(formatCardNumber(e.target.value));
+      }
+      if (name === "cardHolder") {
+        setCardHolder(e.target.value);
       }
 
-      setState((prevValue) => ({
-        ...prevValue,
-        [name]: value,
-      }));
+      // global update
+      if (name === "cardNumber") {
+        if (value === "") {
+          setState((prevValue) => ({
+            ...prevValue,
+            [name]: "#### #### #### ####",
+          }));
+        } else {
+          // format value
+          setState((prevValue) => ({
+            ...prevValue,
+            [name]: formatCardNumber(value),
+          }));
+        }
+      } else if (name === "cardHolder" && value === "") {
+        setState((prevValue) => ({
+          ...prevValue,
+          [name]: "FULL NAME",
+        }));
+      } else if (name === "expirationMonth" && value === "") {
+        setState((prevValue) => ({
+          ...prevValue,
+          [name]: "MM",
+        }));
+      } else if (name === "expirationYear" && value === "") {
+        setState((prevValue) => ({
+          ...prevValue,
+          [name]: "YY",
+        }));
+      } else {
+        setState((prevValue) => ({
+          ...prevValue,
+          [name]: value,
+        }));
+      }
     },
     []
   );
@@ -120,7 +180,7 @@ const Form = ({ children }: Props) => {
             type="text"
             ref={cardHolderRef}
             autoComplete="off"
-            value={state.cardHolder}
+            value={cardHolder}
             name="cardHolder"
             onFocus={() =>
               setState((prevValue) => ({
@@ -200,7 +260,7 @@ const Form = ({ children }: Props) => {
           <div className="cvv form-group w-36">
             <label htmlFor="cvv">CVV</label>
             <input
-              maxLength={3}
+              maxLength={4}
               onFocus={() =>
                 setState((prevValue) => ({
                   ...prevValue,
