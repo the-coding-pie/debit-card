@@ -83,6 +83,7 @@ const Form = ({ children }: Props) => {
         .replace(/(\d{4}) (\d{4})/, "$1 $2 ")
         .replace(/(\d{4}) (\d{4}) (\d{4})/, "$1 $2 $3 ");
     }
+
     return cardNumber.trim();
   }, []);
 
@@ -107,10 +108,12 @@ const Form = ({ children }: Props) => {
           }));
         } else {
           // format value
-          setState((prevValue) => ({
-            ...prevValue,
-            [name]: formatCardNumber(value),
-          }));
+          setState((prevValue) => {
+            return {
+              ...prevValue,
+              [name]: formatCardNumber(value),
+            };
+          });
         }
       } else if (name === "cardHolder" && value === "") {
         setState((prevValue) => ({

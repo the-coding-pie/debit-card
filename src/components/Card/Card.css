@@ -23,7 +23,8 @@
   height: 100%;
   -webkit-backface-visibility: hidden; /* Safari */
   backface-visibility: hidden;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/public/cardBackground/bg.jpeg');
+  background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+    url("/public/cardBackground/bg.jpeg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -32,4 +33,89 @@
 
 .card-back {
   transform: rotateY(180deg);
+}
+
+.slide-fade-up-enter {
+  opacity: 0;
+  transform: translateY(15px);
+  pointer-events: none;
+}
+.slide-fade-up-enter-active {
+  transition: all 0.25s ease-in-out;
+  transition-delay: 0.1s;
+  transform: translateY(0px);
+  position: relative;
+  opacity: 1;
+}
+.slide-fade-up-enter-done {
+  transform: translateY(0px);
+  opacity: 1;
+}
+.slide-fade-up-exit {
+  transform: translateY(0px);
+  pointer-events: none;
+  opacity: 1;
+}
+.slide-fade-up-exit-active {
+  transition: all 250ms ease-in-out;
+  transform: translateY(-15px);
+  position: relative;
+  opacity: 0;
+}
+.slide-fade-up-exit-done {
+  opacity: 0;
+}
+
+.slide-fade-right-enter {
+  opacity: 0;
+  transform: translateX(10px) rotate(45deg);
+  pointer-events: none;
+}
+.slide-fade-right-enter-active {
+  transition: all 0.25s ease-in-out;
+  transform: translateX(0px) rotate(0deg);
+  transition-delay: 0.1s;
+  opacity: 100;
+  position: relative;
+}
+.slide-fade-right-exit {
+  transform: translateX(0px) rotate(0deg);
+  pointer-events: none;
+}
+
+.slide-fade-right-exit-active {
+  opacity: 0;
+  transition: all 0.25s ease-in-out;
+  transform: translateX(30px) rotate(-80deg);
+  position: relative;
+}
+
+.zoom-in-out-enter {
+  transform: translateY(6px) scale(3.5);
+  transition-delay: 0.1s;
+  filter: blur(0.4px);
+  opacity: 0;
+}
+
+.zoom-in-out-enter-active {
+  transition: all 250ms ease-in-out;
+  transform: translateY(0px) scale(1);
+  filter: blur(0px);
+  opacity: 1;
+}
+
+.zoom-in-out-enter-done {
+  opacity: 1;
+}
+
+.zoom-in-out-exit {
+  opacity: 1;
+}
+
+.zoom-in-out-exit-active {
+  transition: all 150ms ease-in-out;
+  transition-delay: 0.1s;
+  transform: translateY(4px) scale(2.3);
+  filter: blur(0.4px);
+  position: relative;
 }

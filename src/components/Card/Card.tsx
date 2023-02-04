@@ -1,6 +1,11 @@
 import { useCallback } from "react";
 import useCard from "../../hooks/useCard";
 import "./Card.css";
+import {
+  CSSTransition,
+  SwitchTransition,
+  TransitionGroup,
+} from "react-transition-group";
 
 const CARDS = {
   visa: "^4",
@@ -88,9 +93,41 @@ const Card = () => {
                 fontSize: "27px",
               }}
             >
-              {state.cardNumber === "#### #### #### ####"
-                ? state.cardNumber
-                : maskCardNumber(state.cardNumber).map((n) => <span>{n}</span>)}
+              <TransitionGroup>
+                {state.cardNumber === "#### #### #### ####"
+                  ? state.cardNumber.split("").map((n, index) => (
+                      <CSSTransition
+                        key={index}
+                        timeout={250}
+                        classNames={"slide-fade-up"}
+                      >
+                        <span
+                          className="inline-block"
+                          style={{
+                            width: "16px",
+                          }}
+                        >
+                          {n}
+                        </span>
+                      </CSSTransition>
+                    ))
+                  : maskCardNumber(state.cardNumber).map((n, index) => (
+                      <CSSTransition
+                        key={index}
+                        timeout={250}
+                        classNames={"slide-fade-up"}
+                      >
+                        <span
+                          className="inline-block"
+                          style={{
+                            width: "16px",
+                          }}
+                        >
+                          {n}
+                        </span>
+                      </CSSTransition>
+                    ))}
+              </TransitionGroup>
             </h3>
           </div>
 
@@ -126,9 +163,39 @@ const Card = () => {
                   fontSize: "18px",
                 }}
               >
-                {state.cardHolder.split("").map((n) => (
-                  <span>{n.toUpperCase()}</span>
-                ))}
+                <TransitionGroup className={"overflow-hidden flex"}>
+                  {state.cardHolder === "FULL NAME"
+                    ? state.cardHolder.split("").map((n) => (
+                        <CSSTransition
+                          timeout={250}
+                          classNames={"slide-fade-right"}
+                        >
+                          <span
+                            className="inline-block"
+                            style={{
+                              width: "10px",
+                            }}
+                          >
+                            {n.toUpperCase()}
+                          </span>
+                        </CSSTransition>
+                      ))
+                    : state.cardHolder.split("").map((n) => (
+                        <CSSTransition
+                          timeout={250}
+                          classNames={"slide-fade-right"}
+                        >
+                          <span
+                            className="inline-block"
+                            style={{
+                              width: "10px",
+                            }}
+                          >
+                            {n.toUpperCase()}
+                          </span>
+                        </CSSTransition>
+                      ))}
+                </TransitionGroup>
               </span>
             </div>
             <div
@@ -161,13 +228,27 @@ const Card = () => {
                   fontSize: "18px",
                 }}
               >
-                {state.expirationMonth.split("").map((n) => (
-                  <span>{n}</span>
-                ))}
+                <SwitchTransition in-out>
+                  <CSSTransition
+                    key={state.expirationMonth}
+                    timeout={200}
+                    classNames={"slide-fade-up"}
+                  >
+                    <span className="inline-block">
+                      {state.expirationMonth}
+                    </span>
+                  </CSSTransition>
+                </SwitchTransition>
                 /
-                {state.expirationYear.split("").map((n) => (
-                  <span>{n}</span>
-                ))}
+                <SwitchTransition out-in>
+                  <CSSTransition
+                    key={state.expirationYear}
+                    timeout={200}
+                    classNames={"slide-fade-up"}
+                  >
+                    <span className="inline-block">{state.expirationYear}</span>
+                  </CSSTransition>
+                </SwitchTransition>
               </span>
             </div>
           </div>
@@ -197,11 +278,19 @@ const Card = () => {
               style={{ height: "45px" }}
             >
               <span>
-                {maskCvv(state.cvv)
-                  .split("")
-                  .map((n) => (
-                    <span>{n}</span>
-                  ))}
+                <TransitionGroup>
+                  {maskCvv(state.cvv)
+                    .split("")
+                    .map((n, index) => (
+                      <CSSTransition
+                        key={index}
+                        timeout={250}
+                        classNames={"zoom-in-out"}
+                      >
+                        <span className="inline-block">{n}</span>
+                      </CSSTransition>
+                    ))}
+                </TransitionGroup>
               </span>
             </div>
 
