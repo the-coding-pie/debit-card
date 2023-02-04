@@ -1,4 +1,10 @@
-import React, { ReactNode, useCallback, useEffect, useState } from "react";
+import React, {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import Card from "./Card/Card";
 import useCard from "../hooks/useCard";
 
@@ -20,11 +26,40 @@ const Months = [
   "11",
   "12",
 ];
-const Years = [2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031];
+const Years = [
+  { label: 2023, value: 23 },
+  { label: 2024, value: 24 },
+  { label: 2025, value: 25 },
+  { label: 2026, value: 26 },
+  { label: 2027, value: 27 },
+  { label: 2028, value: 28 },
+  { label: 2029, value: 29 },
+  { label: 2030, value: 30 },
+  { label: 2031, value: 31 },
+];
 
 const Form = ({ children }: Props) => {
   const { state, setState } = useCard();
   const [cardNumber, setCardNumber] = useState("");
+
+  const cardNumberRef = useRef<HTMLInputElement | null>(null);
+  const cardHolderRef = useRef<HTMLInputElement | null>(null);
+  const cardMonthRef = useRef<HTMLSelectElement | null>(null);
+  const cardYearRef = useRef<HTMLSelectElement | null>(null);
+
+  useEffect(() => {
+    if (state.activeInput) {
+      if (state.activeInput === "cardNumber") {
+        cardNumberRef?.current?.focus();
+      } else if (state.activeInput === "cardHolder") {
+        cardHolderRef?.current?.focus();
+      } else if (state.activeInput === "expirationMonth") {
+        cardMonthRef?.current?.focus();
+      } else if (state.activeInput === "expirationYear") {
+        cardYearRef?.current?.focus();
+      }
+    }
+  }, [state.activeInput]);
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -57,10 +92,23 @@ const Form = ({ children }: Props) => {
           <input
             id="cardNumber"
             type="tel"
+            ref={cardNumberRef}
             autoComplete="off"
             maxLength={19}
             value={cardNumber}
             name="cardNumber"
+            onFocus={() =>
+              setState((prevValue) => ({
+                ...prevValue,
+                activeInput: "cardNumber",
+              }))
+            }
+            onBlur={() =>
+              setState((prevValue) => ({
+                ...prevValue,
+                activeInput: null,
+              }))
+            }
             onChange={handleChange}
           />
         </div>
@@ -70,9 +118,22 @@ const Form = ({ children }: Props) => {
           <input
             id="cardHolder"
             type="text"
+            ref={cardHolderRef}
             autoComplete="off"
             value={state.cardHolder}
             name="cardHolder"
+            onFocus={() =>
+              setState((prevValue) => ({
+                ...prevValue,
+                activeInput: "cardHolder",
+              }))
+            }
+            onBlur={() =>
+              setState((prevValue) => ({
+                ...prevValue,
+                activeInput: null,
+              }))
+            }
             onChange={handleChange}
           />
         </div>
@@ -85,6 +146,19 @@ const Form = ({ children }: Props) => {
               <select
                 name="expirationMonth"
                 onChange={handleChange}
+                ref={cardMonthRef}
+                onFocus={() =>
+                  setState((prevValue) => ({
+                    ...prevValue,
+                    activeInput: "expirationMonth",
+                  }))
+                }
+                onBlur={() =>
+                  setState((prevValue) => ({
+                    ...prevValue,
+                    activeInput: null,
+                  }))
+                }
                 value={state.expirationMonth}
               >
                 <option value="">Month</option>
@@ -98,12 +172,25 @@ const Form = ({ children }: Props) => {
               <select
                 name="expirationYear"
                 onChange={handleChange}
+                onFocus={() =>
+                  setState((prevValue) => ({
+                    ...prevValue,
+                    activeInput: "expirationYear",
+                  }))
+                }
+                onBlur={() =>
+                  setState((prevValue) => ({
+                    ...prevValue,
+                    activeInput: null,
+                  }))
+                }
+                ref={cardYearRef}
                 value={state.expirationYear}
               >
                 <option value="">Year</option>
                 {Years.map((y) => (
-                  <option key={y} value={y}>
-                    {y}
+                  <option key={y.value} value={y.value}>
+                    {y.label}
                   </option>
                 ))}
               </select>

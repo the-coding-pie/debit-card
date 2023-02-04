@@ -3,13 +3,13 @@ import useCard from "../../hooks/useCard";
 import "./Card.css";
 
 const Card = () => {
-  const { state } = useCard();
+  const { state, setState } = useCard();
 
   return (
     <div className={`card absolute -top-28 left-16 font-sourceCodePro`}>
       <div className={`card-inner ${state.isFlipped ? "flipped" : ""}`}>
-        <div className="card-front px-6 py-6">
-          <div className="top flex items-center justify-between mb-10 px-1">
+        <div className="card-front px-4 py-6">
+          <div className="top flex items-center justify-between mb-8 px-2">
             <img
               src="/chip.png"
               style={{
@@ -25,9 +25,25 @@ const Card = () => {
             </div>
           </div>
 
-          <div className="card-number mb-6 w-full">
+          <div
+            onClick={() =>
+              setState((prevValue) => ({
+                ...prevValue,
+                activeInput: "cardNumber",
+              }))
+            }
+            className={`card-number cursor-pointer mb-10 w-max flex items-center px-2 py-1 ${
+              state.activeInput === "cardNumber"
+                ? "border-special"
+                : "border-not-visible"
+            }`}
+            style={{
+              height: "50px",
+              width: "328px",
+            }}
+          >
             <h3
-              className="text-white font-semibold px-1 py-2.5"
+              className="text-white font-semibold"
               style={{
                 fontSize: "27px",
               }}
@@ -36,8 +52,25 @@ const Card = () => {
             </h3>
           </div>
 
-          <div className="name-and-expires flex items-center justify-between text-white px-1">
-            <div className="card-holder flex flex-col gap-y-0.5 font-semibold">
+          <div className="name-and-expires flex items-center justify-between text-white gap-x-4">
+            <div
+              onClick={() =>
+                setState((prevValue) => ({
+                  ...prevValue,
+                  activeInput: "cardHolder",
+                }))
+              }
+              className={`card-holder cursor-pointer flex flex-1 flex-col overflow-hidden justify-center font-semibold px-2 py-1   ${
+                state.activeInput === "cardHolder"
+                  ? "border-special"
+                  : "border-not-visible"
+              }`}
+              style={{
+                columnGap: "1px",
+                height: "54px",
+                width: "327px",
+              }}
+            >
               <span
                 style={{
                   opacity: "0.7",
@@ -54,7 +87,23 @@ const Card = () => {
                 {state.cardHolder}
               </span>
             </div>
-            <div className="card-holder flex flex-col gap-y-0.5 font-semibold">
+            <div
+              className={`card-expires cursor-pointer flex flex-col font-semibold px-2 py-1  ${
+                state.activeInput === "expirationMonth" ||
+                state.activeInput === "expirationYear"
+                  ? "border-special"
+                  : "border-not-visible"
+              }`}
+              style={{
+                columnGap: "1px",
+              }}
+              onClick={() =>
+                setState((prevValue) => ({
+                  ...prevValue,
+                  activeInput: "expirationMonth",
+                }))
+              }
+            >
               <span
                 style={{
                   opacity: "0.7",

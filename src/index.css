@@ -55,4 +55,11 @@
 }
 
 @layer utilities {
+  .border-not-visible {
+    border: 2px solid transparent;
+  }
+
+  .border-special {
+    @apply border-2 border-white rounded border-opacity-50;
+  }
 }

@@ -7,6 +7,12 @@ interface CardObj {
   expirationYear: string;
   cvv: string;
   isFlipped: boolean;
+  activeInput:
+    | "cardNumber"
+    | "cardHolder"
+    | "expirationMonth"
+    | "expirationYear"
+    | null;
 }
 
 interface CardState {
@@ -28,6 +34,7 @@ const CardContextProvider = ({ children }: Props) => {
     expirationMonth: "MM",
     expirationYear: "YY",
     isFlipped: false,
+    activeInput: null,
   });
 
   return (
